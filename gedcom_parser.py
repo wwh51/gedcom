@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 def create_node_by_line(line):
     if line[2] is None:
-        return ET.Element(line[1])
+        return ET.Element(line[1].lower())
     name = line[1]
     value = line[2].strip()
     id_pattern = re.compile(r'(@.*@)')
