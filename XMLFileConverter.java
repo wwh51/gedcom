@@ -13,35 +13,40 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
- 
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class Gedcom2XMLFile
-{	
+public class XMLFileConverter
+{
 	private String m_strInputFileName;
 	private String m_strOutputFileName;
-	
-	public Gedcom2XMLFile(String strInputFilename, String strOutputFilename)
+	private String m_strRootTag;
+	private IXMLConverter converter;
+
+	public XMLFileConverter(String strInputFilename, String strOutputFilename
+		, String strRootTag, IXMLConverter content_converter)
 	{
 		m_strInputFileName = strInputFilename;
 		m_strOutputFileName = strOutputFilename;
+		converter = content_converter;
+		m_strRootTag = strRootTag;
 	}
 
 
-	public void convert() throws IOException
+	public void convert() throws IOException, InvalidFormatException
 	{
 		BufferedReader filereader = new BufferedReader(new FileReader(m_strInputFileName));
 
 		Document doc = CreateXMLDocObject();
 		if(doc == null)
 			return;
-		Element rootElement = doc.createElement("gedcom");
+		Element rootElement = doc.createElement(m_strRootTag);
 		doc.appendChild(rootElement);
 
-		Gedcom2XMLImpl converter = new Gedcom2XMLImpl();
-		converter.convert(filereader, rootElement);		
+		converter.convert(filereader, rootElement);
+
 		SaveXMLDocument(doc, m_strOutputFileName);
 	}
 
@@ -55,13 +60,13 @@ public class Gedcom2XMLFile
 			return doc;
 		}
 		catch (ParserConfigurationException pce) {
-	 		pce.printStackTrace();
+	 		// TODO process exception?
    		}
    		return null;
 	}
 
-	private void SaveXMLDocument(Document doc, String strOutputFilename)
-	{		
+	private void SaveXMLDocument(Document doc, String strOutputFilename) throws IOException
+	{
 		try
 		{
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -71,8 +76,9 @@ public class Gedcom2XMLFile
 			transformer.transform(source, result);
 		}
 		catch (TransformerException tfe) {
-	 		tfe.printStackTrace();
+	 		//tfe.printStackTrace();
+	 		throw new IOException(tfe.toString());
    		}
 	}
-	
+
 }
