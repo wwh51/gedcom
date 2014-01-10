@@ -6,60 +6,65 @@ import java.util.Stack;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class Gedcom2XMLImpl
-{	
+public class Gedcom2XMLImpl implements IXMLConverter
+{
 	private static final String ATTR_ID = "id";
 	private static final String ATTR_VALUE = "value";
-	
+
 	public Gedcom2XMLImpl()
-	{		
+	{
 	}
 
-	public void convert(BufferedReader gedcom_input, Element rootElement ) throws IOException
-	{		
+	public void convert(BufferedReader gedcom_input, Element rootElement ) throws IOException, InvalidFormatException
+	{
 		Stack<Element> elementStack = new Stack<Element>();
 		Stack<Integer> elementLevel = new Stack<Integer>();
 		elementStack.push(rootElement);
 		elementLevel.push(-1);
-		while (true) 
+		GedcomLineParser parser = new GedcomLineParser();
+		while (true)
 		{
-			String strLine = gedcom_input.readLine();
+			String strLine = gedcom_input.readLine(); //IOException
 			if ( strLine  == null )
 				break;
-
-			GedcomLineParser parser = new GedcomLineParser(strLine);
-			if(!parser.IsValid())
+			strLine = strLine.trim();
+			if(strLine == "")
 				continue;
+
+			if(!parser.parse(strLine))
+			{
+				throw new InvalidFormatException("Invalid gedcom format:" + strLine);
+			}
 
 			Element newNode = rootElement.getOwnerDocument().createElement(parser.getTag());
 			if(parser.getValue() != null)
 			{
-				if(parser.IsIDValue())
+				if(parser.HasId())
 					newNode.setAttribute(ATTR_ID, parser.getValue());
 				else
-					newNode.setTextContent(parser.getValue());					
+					newNode.setTextContent(parser.getValue());
 			}
-			if(parser.getIntLevel() > elementLevel.lastElement())
+			if(parser.getLevel() > elementLevel.lastElement())
 			{
 				Element lastElement = elementStack.lastElement();
 				String strText = lastElement.getTextContent();
 				if(strText != null && strText.length() > 0)
 				{
 					for(int i = lastElement.getChildNodes().getLength() - 1; i >= 0; i--)
-						lastElement.removeChild(lastElement.getChildNodes().item(i));					
-					lastElement.setAttribute(ATTR_VALUE, strText);	
+						lastElement.removeChild(lastElement.getChildNodes().item(i));
+					lastElement.setAttribute(ATTR_VALUE, strText);
 				}
 			}
 
-			while(parser.getIntLevel() <= elementLevel.lastElement())
+			while(parser.getLevel() <= elementLevel.lastElement())
 			{
 				elementLevel.pop();
 				elementStack.pop();
 			}
 			elementStack.lastElement().appendChild(newNode);
 			elementStack.push(newNode);
-			elementLevel.push(parser.getIntLevel());			
+			elementLevel.push(parser.getLevel());
 		}
 	}
-	
+
 }
