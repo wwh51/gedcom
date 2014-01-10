@@ -37,17 +37,17 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class Gedcom2XMLImplTest {
     @Test
-    public void testNormalCases() throws SAXException, IOException
+    public void testNormalCases() throws SAXException, IOException, InvalidFormatException
     {
 	    String strGedcom = "0 @I0001@ INDI\n";
 	    strGedcom += "1 NAME Elizabeth Alexandra Mary /Windsor/";
 	    String strGeneratedXML = GetXMLStringFromGedcomBuffer(strGedcom);
-	    String strBaseXML = "<gedcom><indi id=\"@I0001@\"><name>Elizabeth Alexandra Mary /Windsor/</name></indi></gedcom>";		
+	    String strBaseXML = "<gedcom><indi id=\"@I0001@\"><name>Elizabeth Alexandra Mary /Windsor/</name></indi></gedcom>";
 		Diff xmlDiff = new Diff(strGeneratedXML, strBaseXML);
 		assertTrue(xmlDiff.similar());
     }
 
-    private String GetXMLStringFromGedcomBuffer(String strGedcom) throws SAXException, IOException
+    private String GetXMLStringFromGedcomBuffer(String strGedcom) throws SAXException, IOException, InvalidFormatException
 	{
 		InputStream is = new ByteArrayInputStream(strGedcom.getBytes());
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
