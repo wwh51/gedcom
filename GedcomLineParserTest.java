@@ -12,36 +12,55 @@ public class GedcomLineParserTest {
 
     @Test
     public void testInvalidCases() {
-    	GedcomLineParser parser = new GedcomLineParser("   ");
-    	assertFalse(parser.IsValid());
-    	parser = new GedcomLineParser("0 ");
-    	assertFalse(parser.IsValid());
+        GedcomLineParser parser = new GedcomLineParser();
+        assertFalse(parser.parse(""));
+        assertFalse(parser.parse("\t\t"));
+        assertFalse(parser.parse("TAG"));
+        assertFalse(parser.parse("   TAG   "));
+        assertFalse(parser.parse("1TAG"));
+        assertFalse(parser.parse("   1TAG   "));
+        assertTrue(parser.parse("-2 TAG"));
+        assertFalse(parser.parse("TAG 3"));
+        assertFalse(parser.parse("4 @I001@  "));
     }
 
     @Test
     public void testValidCases() {
-    	GedcomLineParser parser = new GedcomLineParser("3 @I0001@ INDI");
-    	assertTrue(parser.IsValid());
-    	assertTrue(parser.IsIDValue());
-    	assertEquals(parser.getStrLevel(),"3");
-    	assertEquals(parser.getIntLevel(),3);
-    	assertEquals(parser.getTag(),"indi");    	
-    	assertEquals(parser.getValue(),"@I0001@");
+        GedcomLineParser parser = new GedcomLineParser();
+        assertTrue(parser.parse("1  ABC  DEF"));
+        assertFalse(parser.HasId());
+        assertEquals(parser.getLevel(),1);
+        assertEquals(parser.getTag(),"abc");
+        assertEquals(parser.getValue(),"DEF");
 
-    	parser = new GedcomLineParser("   2 PLAC 17 Bruton Street, London, W1   ");
-    	assertTrue(parser.IsValid());
-    	assertFalse(parser.IsIDValue());
-    	assertEquals(parser.getStrLevel(),"2");
-    	assertEquals(parser.getIntLevel(),2);
-    	assertEquals(parser.getTag(),"plac");    	
-    	assertEquals(parser.getValue(),"17 Bruton Street, London, W1");
+        assertTrue(parser.parse("    1  ABC       DEF       "));
+        assertFalse(parser.HasId());
+        assertEquals(parser.getLevel(),1);
+        assertEquals(parser.getTag(),"abc");
+        assertEquals(parser.getValue(),"DEF");
 
-    	parser = new GedcomLineParser("   1 FAMC @F0001@   ");
-    	assertTrue(parser.IsValid());
-    	assertTrue(parser.IsIDValue());
-    	assertEquals(parser.getStrLevel(),"1");
-    	assertEquals(parser.getIntLevel(),1);
-    	assertEquals(parser.getTag(),"famc");    	
-    	assertEquals(parser.getValue(),"@F0001@");
+        assertTrue(parser.parse("2    TAG    "));
+        assertFalse(parser.HasId());
+        assertEquals(parser.getLevel(),2);
+        assertEquals(parser.getTag(),"tag");
+        assertEquals(parser.getValue(),"");
+
+        assertTrue(parser.parse("3 TAG @I001@"));
+        assertTrue(parser.HasId());
+        assertEquals(parser.getLevel(),3);
+        assertEquals(parser.getTag(),"tag");
+        assertEquals(parser.getValue(),"@I001@");
+
+        assertTrue(parser.parse("4 @I001@ TAG"));
+        assertTrue(parser.HasId());
+        assertEquals(parser.getLevel(),4);
+        assertEquals(parser.getTag(),"tag");
+        assertEquals(parser.getValue(),"@I001@");
+
+        assertTrue(parser.parse("   1 NAME Elizabeth Alexandra Mary /Windsor/   "));
+        assertFalse(parser.HasId());
+        assertEquals(parser.getLevel(),1);
+        assertEquals(parser.getTag(),"name");
+        assertEquals("Elizabeth Alexandra Mary /Windsor/", parser.getValue());
     }
 }
