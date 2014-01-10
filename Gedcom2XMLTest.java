@@ -1,11 +1,9 @@
 
 import java.io.IOException;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Gedcom2XMLTest
-{	
+{
+
 	public static void main(String[] args) throws IOException, Exception
 	{
 		if(args.length < 2)
@@ -14,7 +12,9 @@ public class Gedcom2XMLTest
 			System.exit(0);
 		}
 
-		Gedcom2XMLFile gedcom2xml = new Gedcom2XMLFile(args[0],args[1]);
-		gedcom2xml.convert();
+		Gedcom2XMLImpl converter = new Gedcom2XMLImpl();
+
+		XMLFileConverter xml_converter = new XMLFileConverter(args[0],args[1], "gedcom", converter);
+		xml_converter.convert();
 	}
 }
