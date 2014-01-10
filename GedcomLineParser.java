@@ -1,65 +1,54 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GedcomLineParser
-{	
-	protected String m_strLevel;
-	protected String m_strTag;
-	protected String m_strValue;
-	protected Boolean m_bValueIsId;
+{
+	private static final Pattern gedcomPattern = Pattern.compile("\\s*(\\d+)\\s+(\\S+)\\s*(.*)", Pattern.DOTALL);
+	private String m_strTag;
+        	private String m_strValue;
+       	private Boolean m_bHasId;
+       	private int m_nLevel;
 
-	public GedcomLineParser(String strLine)
+       	public GedcomLineParser()
+        	{
+        		Init();
+        	}
+
+	public Boolean parse(String strLine)
 	{
-		m_strTag = m_strValue = m_strLevel = null;
-		m_bValueIsId = false;
-		if (strLine != null )
+		Init();
+		Matcher m = gedcomPattern.matcher(strLine);
+		if(!m.find())
+			return false;
+
+		m_strTag = m.group(2);
+		m_strValue = m.group(3).trim();
+		if(m_strValue.startsWith("@") && m_strValue.endsWith("@") && m_strValue.length() > 2)
 		{
-			DoParse(strLine.trim());
+		        m_bHasId = true;
 		}
-	}
-	
-	protected void DoParse(String strLine)
-	{
-		String[] tokens = strLine.split("\\s+", 3);
-		if(tokens.length < 1)
-			return;
-		m_strLevel = tokens[0];
-		if(tokens.length < 2)
-			return;		
-		m_strTag = tokens[1].toLowerCase();
-		if(tokens.length < 3)
-			return;
-		m_strValue = tokens[2];		
-		
-		if(m_strValue.startsWith("@") && m_strValue.endsWith("@"))
+		else if(m_strTag.startsWith("@") && m_strTag.endsWith("@") && m_strTag.length() > 2)
 		{
-			m_bValueIsId = true;			
+		        if(m_strValue.length() <= 0)
+		        		return false;
+
+		        m_bHasId = true;
+		        m_strTag = m_strValue;
+		        m_strValue = m.group(2);
 		}
-		else if(m_strTag.startsWith("@") && m_strTag.endsWith("@"))
-		{
-			m_bValueIsId = true;
-			m_strValue = tokens[1];
-			m_strTag = tokens[2].toLowerCase();
-			return;			
-		}
-	}
-	
-	public Boolean IsValid()
-	{
-		return m_strLevel != null && m_strTag != null;
+		m_strTag = m_strTag.toLowerCase();
+		m_nLevel = Integer.parseInt(m.group(1));
+		return true;
 	}
 
-	public Boolean IsIDValue()
+	public Boolean HasId()
 	{
-		return m_bValueIsId;
+		return m_bHasId;
 	}
 
-	public String getStrLevel()
+	public int getLevel()
 	{
-		return m_strLevel;
-	}
-
-	public int getIntLevel()
-	{		
-		return Integer.parseInt(m_strLevel);
+		return m_nLevel;
 	}
 
 	public String getTag()
@@ -70,5 +59,11 @@ public class GedcomLineParser
 	public String getValue()
 	{
 		return m_strValue;
+	}
+
+	private void Init()
+	{
+		m_strTag = m_strValue = null;
+		m_bHasId = false;
 	}
 }
