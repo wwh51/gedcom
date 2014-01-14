@@ -39,10 +39,20 @@ public class Gedcom2XMLImplTest {
     @Test
     public void testNormalCases() throws SAXException, IOException, InvalidFormatException
     {
-	    String strGedcom = "0 @I0001@ INDI\n";
-	    strGedcom += "1 NAME Elizabeth Alexandra Mary /Windsor/";
+	    String strGedcom = "0 @I0001@ INDI\n"
+	    			+"1 NAME Elizabeth Alexandra Mary /Windsor/\n"
+	    			+"     1 SEX F    \n"
+	    			+"1 BIRT    \n"
+	    			+"  2 DATE 21 Apr 1926\n"
+	    			+"      \n   "
+	    			+"1 OCCU Queen\n";
 	    String strGeneratedXML = GetXMLStringFromGedcomBuffer(strGedcom);
-	    String strBaseXML = "<gedcom><indi id=\"@I0001@\"><name>Elizabeth Alexandra Mary /Windsor/</name></indi></gedcom>";
+	    String strBaseXML = "<gedcom><indi id=\"@I0001@\"><name>Elizabeth Alexandra Mary /Windsor/</name>"
+	    			  +"<sex>F</sex>"
+	    			  +"<birt><date>21 Apr 1926</date></birt>"
+	    			  +"<occu>Queen</occu>"
+	    			  +"</indi></gedcom>";
+
 		Diff xmlDiff = new Diff(strGeneratedXML, strBaseXML);
 		assertTrue(xmlDiff.similar());
     }
