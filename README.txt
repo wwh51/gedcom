@@ -18,16 +18,9 @@ At last, Gedcom2XMLTest a class to call XMLFileConverter and Gedcom2XMLImpl to d
 The benefits of my design is: we can use Gedcom2XMLImpl for other places (GEDCOM data come from network or memory), not only do file converting. And XMLFileConverter can be used by other XML files converting.
 
 3 How to execute the solution to the challenge
-At gedcom/, run the following command
-javac -cp "./junit.jar;./xmlunit.jar;./" *.java
-java Gedcom2XMLTest ".\testfile\sample.txt" ".\testfile\sample.xml"
 
-java Gedcom2XMLTest <gedcom_inputfilename> <xml_outputfilename> 
+in Unix/Linux, chmod +x *.bat to make bat files executable
 
-For unit test, please run
-javac -cp "./junit.jar;./xmlunit.jar;./" *.java
-java -cp "./junit.jar;./xmlunit.jar;./" org.junit.runner.JUnitCore GedcomLineParserTest
-java -cp "./junit.jar;./xmlunit.jar;./" org.junit.runner.JUnitCore Gedcom2XMLImplTest
-
-4 later improvement
-TODO
+At ./, run the following command
+unittest.bat # to run unit tests
+make.bat # to bilt all java files and run command to convert gedcom files in testfiles/
