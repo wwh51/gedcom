@@ -23,7 +23,7 @@ public class Gedcom2XMLImpl implements IXMLConverter
 			String strLine = gedcom_input.readLine(); //IOException
 			if ( strLine  == null )
 				break;
-			strLine = strLine.replaceAll("\\r\\n|\\r|\\n", "").trim();
+			strLine = strLine.replaceAll(System.getProperty("line.separator"), "").trim();
 			if(strLine.length() == 0)
 				continue;
 

@@ -1,0 +1,104 @@
+1 why I selected 'GEDCOM Parser Challenge'
+A: I'm interested in the file format of GEDCOM and I think it's a good sample to show my OOP skills.
+
+2 Design and approach
+
+3 How to execute the solution to the challenge
+
+
+
+______________________________________________________________________
+
+VERSION 1.0
+
+Purpose:
+> First Commit
+> Files added
+	> Parse.java  : Functionality to Parse the data
+	> XMLWriter.java : Functionality to write XML
+	> GEDCOM2XML.java : Functionality to process
+	> TestGEDCOM2XML.java : Functionality to Test GEDCOM2XML convertion
+	> GEDCOM_Parser_Challenge_sample_data.txt  : Input file
+	> GEDCOM_Parser_Challenge_result.xml  : Output file
+> Basic functionality to take GEDCOM input file and convert it to XML file 
+> Compilation : javac TestGEDCOM2XML.java
+> Usage: java TestGEDCOM2XML <gedcominputfilename> <xmloutputfilename>
+
+RESULT
+______________________________________________________________________
+INPUT: GEDCOM_Parser_Challenge_sample_data.txt
+OUTPUT: GEDCOM_Parser_Challenge_result.xml 
+(Note: both present in the same directory for reference )
+
+______________________________________________________________________
+
+VERSION 2.0
+Purpose:
+> Second Commit
+> Note: Information mentioned in First commit still valid
+> Added Junit Test Framework
+> Files added
+	> junit-4.10.jar : JUnit Test support
+	> TestCasesGEDCOM2XML.java : TestCases for GEDCOM2XML
+	> GEDCOMTestSuite.java : GEDCOM Test Suite 
+> Compilation : javac   -cp .:junit-4.10.jar *.java
+> Usage java -cp .:junit-4.10.jar org.junit.runner.JUnitCore GEDCOMTestSuite
+
+
+RESULT
+______________________________________________________________________
+JUnit version 4.10
+In TestCasesGEDCOM2XML::BeforeClass
+.In TestCasesGEDCOM2XML::setUp
+In TestCasesGEDCOM2XML::testConvertGEDCOM2XML
+In TestCasesGEDCOM2XML::fileCompare
+In TestCasesGEDCOM2XML::tearDown
+In TestCasesGEDCOM2XML::AfterClass
+
+Time: 1.878
+
+OK (1 test)
+______________________________________________________________________
+
+
+______________________________________________________________________
+
+VERSION 3.0 
+Purpose:
+> Third Major Commit
+> Added Test Cases to cover Test cases mentioned in the Specification
+> Compilation : javac   -cp .:junit-4.10.jar *.java
+> Usage java -cp .:junit-4.10.jar org.junit.runner.JUnitCore GEDCOMTestSuite
+
+RESULT
+______________________________________________________________________
+Aconex_GEDCOM_Parser_Coding_Challenge $ java -cp .:junit-4.10.jar org.junit.runner.JUnitCore GEDCOMTestSuite
+JUnit version 4.10
+In TestCasesGEDCOM2XML::BeforeClass
+.In TestCasesGEDCOM2XML::setUp
+In TestCasesGEDCOM2XML::testVariableWhiteSpacebtLevelAndTag
+In TestCasesGEDCOM2XML::executeConvert
+In TestCasesGEDCOM2XML::fileCompare
+In TestCasesGEDCOM2XML::tearDown
+.In TestCasesGEDCOM2XML::setUp
+In TestCasesGEDCOM2XML::testBlankLines
+In TestCasesGEDCOM2XML::executeConvert
+In TestCasesGEDCOM2XML::fileCompare
+In TestCasesGEDCOM2XML::tearDown
+.In TestCasesGEDCOM2XML::setUp
+In TestCasesGEDCOM2XML::testValues
+In TestCasesGEDCOM2XML::executeConvert
+In TestCasesGEDCOM2XML::fileCompare
+In TestCasesGEDCOM2XML::tearDown
+.In TestCasesGEDCOM2XML::setUp
+In TestCasesGEDCOM2XML::testConvertGEDCOM2XML
+In TestCasesGEDCOM2XML::executeConvert
+In TestCasesGEDCOM2XML::fileCompare
+In TestCasesGEDCOM2XML::tearDown
+In TestCasesGEDCOM2XML::AfterClass
+
+Time: 1.329
+
+OK (4 tests)
+
+______________________________________________________________________
