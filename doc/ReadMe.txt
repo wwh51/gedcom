@@ -3,102 +3,24 @@ A: I'm interested in the file format of GEDCOM and I think it's a good sample to
 
 2 Design and approach
 
+First I developed a quick prototype with python (gedcom_parser.py). 
+
+A class GedcomLineParser to parse one line of GEDCOM file is designed firstly. I used split("\\s+",  3) to parse it, then changed it to use regular expression. And I developed unit test codes (GedcomLineParserTest). Junit is used here.
+
+Instead of creating one class to convert one GEDCOM file to XML file, I designed one interface IXMLConverter which has only one function:
+convert(BufferedReader gedcom_input, Element rootElement )
+Then I developed the class Gedcom2XMLImpl to implement a GEDCOM converter, and the class Gedcom2XMLImplTest to do unit test. Xmlunit is used to compare two similar xml trees.
+
+XMLFileConverter is a general class which can convert any structured document to XML file.
+
+At last, Gedcom2XMLTest a class to call XMLFileConverter and Gedcom2XMLImpl to do GECOM files converting.
+
+The benefits of my design is: we can use Gedcom2XMLImpl for other places (GEDCOM data come from network or memory), not only do file converting. And XMLFileConverter can be used by other XML files converting.
+
 3 How to execute the solution to the challenge
 
+in Unix/Linux, chmod +x *.bat to make bat files executable
 
-
-______________________________________________________________________
-
-VERSION 1.0
-
-Purpose:
-> First Commit
-> Files added
-	> Parse.java  : Functionality to Parse the data
-	> XMLWriter.java : Functionality to write XML
-	> GEDCOM2XML.java : Functionality to process
-	> TestGEDCOM2XML.java : Functionality to Test GEDCOM2XML convertion
-	> GEDCOM_Parser_Challenge_sample_data.txt  : Input file
-	> GEDCOM_Parser_Challenge_result.xml  : Output file
-> Basic functionality to take GEDCOM input file and convert it to XML file 
-> Compilation : javac TestGEDCOM2XML.java
-> Usage: java TestGEDCOM2XML <gedcominputfilename> <xmloutputfilename>
-
-RESULT
-______________________________________________________________________
-INPUT: GEDCOM_Parser_Challenge_sample_data.txt
-OUTPUT: GEDCOM_Parser_Challenge_result.xml 
-(Note: both present in the same directory for reference )
-
-______________________________________________________________________
-
-VERSION 2.0
-Purpose:
-> Second Commit
-> Note: Information mentioned in First commit still valid
-> Added Junit Test Framework
-> Files added
-	> junit-4.10.jar : JUnit Test support
-	> TestCasesGEDCOM2XML.java : TestCases for GEDCOM2XML
-	> GEDCOMTestSuite.java : GEDCOM Test Suite 
-> Compilation : javac   -cp .:junit-4.10.jar *.java
-> Usage java -cp .:junit-4.10.jar org.junit.runner.JUnitCore GEDCOMTestSuite
-
-
-RESULT
-______________________________________________________________________
-JUnit version 4.10
-In TestCasesGEDCOM2XML::BeforeClass
-.In TestCasesGEDCOM2XML::setUp
-In TestCasesGEDCOM2XML::testConvertGEDCOM2XML
-In TestCasesGEDCOM2XML::fileCompare
-In TestCasesGEDCOM2XML::tearDown
-In TestCasesGEDCOM2XML::AfterClass
-
-Time: 1.878
-
-OK (1 test)
-______________________________________________________________________
-
-
-______________________________________________________________________
-
-VERSION 3.0 
-Purpose:
-> Third Major Commit
-> Added Test Cases to cover Test cases mentioned in the Specification
-> Compilation : javac   -cp .:junit-4.10.jar *.java
-> Usage java -cp .:junit-4.10.jar org.junit.runner.JUnitCore GEDCOMTestSuite
-
-RESULT
-______________________________________________________________________
-Aconex_GEDCOM_Parser_Coding_Challenge $ java -cp .:junit-4.10.jar org.junit.runner.JUnitCore GEDCOMTestSuite
-JUnit version 4.10
-In TestCasesGEDCOM2XML::BeforeClass
-.In TestCasesGEDCOM2XML::setUp
-In TestCasesGEDCOM2XML::testVariableWhiteSpacebtLevelAndTag
-In TestCasesGEDCOM2XML::executeConvert
-In TestCasesGEDCOM2XML::fileCompare
-In TestCasesGEDCOM2XML::tearDown
-.In TestCasesGEDCOM2XML::setUp
-In TestCasesGEDCOM2XML::testBlankLines
-In TestCasesGEDCOM2XML::executeConvert
-In TestCasesGEDCOM2XML::fileCompare
-In TestCasesGEDCOM2XML::tearDown
-.In TestCasesGEDCOM2XML::setUp
-In TestCasesGEDCOM2XML::testValues
-In TestCasesGEDCOM2XML::executeConvert
-In TestCasesGEDCOM2XML::fileCompare
-In TestCasesGEDCOM2XML::tearDown
-.In TestCasesGEDCOM2XML::setUp
-In TestCasesGEDCOM2XML::testConvertGEDCOM2XML
-In TestCasesGEDCOM2XML::executeConvert
-In TestCasesGEDCOM2XML::fileCompare
-In TestCasesGEDCOM2XML::tearDown
-In TestCasesGEDCOM2XML::AfterClass
-
-Time: 1.329
-
-OK (4 tests)
-
-______________________________________________________________________
+At ./, run the following command
+unittest.bat # to run unit tests
+make.bat # to bilt all java files and run command to convert gedcom files in testfiles/
