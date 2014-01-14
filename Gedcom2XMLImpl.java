@@ -11,29 +11,25 @@ public class Gedcom2XMLImpl implements IXMLConverter
 	private static final String ATTR_ID = "id";
 	private static final String ATTR_VALUE = "value";
 
-	public Gedcom2XMLImpl()
-	{
-	}
-
 	public void convert(BufferedReader gedcom_input, Element rootElement ) throws IOException, InvalidFormatException
 	{
 		Stack<Element> elementStack = new Stack<Element>();
 		Stack<Integer> elementLevel = new Stack<Integer>();
 		elementStack.push(rootElement);
-		elementLevel.push(-1);
+		elementLevel.push(-1); // as the root level
 		GedcomLineParser parser = new GedcomLineParser();
 		while (true)
 		{
 			String strLine = gedcom_input.readLine(); //IOException
 			if ( strLine  == null )
 				break;
-			strLine = strLine.trim();
-			if(strLine == "")
+			strLine = strLine.replaceAll("\\r\\n|\\r|\\n", "").trim();
+			if(strLine.length() == 0)
 				continue;
 
 			if(!parser.parse(strLine))
 			{
-				throw new InvalidFormatException("Invalid gedcom format:" + strLine);
+				throw new InvalidFormatException("Invalid gedcom format:[" + strLine + "]");
 			}
 
 			Element newNode = rootElement.getOwnerDocument().createElement(parser.getTag());
@@ -44,6 +40,7 @@ public class Gedcom2XMLImpl implements IXMLConverter
 				else
 					newNode.setTextContent(parser.getValue());
 			}
+			// the previous node has child, so we need to set 'value' attribute of it
 			if(parser.getLevel() > elementLevel.lastElement())
 			{
 				Element lastElement = elementStack.lastElement();
@@ -56,6 +53,7 @@ public class Gedcom2XMLImpl implements IXMLConverter
 				}
 			}
 
+			// find the parent node of the new node
 			while(parser.getLevel() <= elementLevel.lastElement())
 			{
 				elementLevel.pop();
